@@ -200,6 +200,7 @@ class MainModel(nn.Module):
         return att_all, self.hidden2label(hidden_states)
 
     def step(self, act_in, obs_in, beacons, gt_pos, bpdecay, active):
+        gt_x_normalized = gt_pos[:, :, 0:1] / self.map_size
         gt_y_normalized = gt_pos[:, :, 1:2] / self.map_size
         gt_theta_normalized = gt_pos[:, :, 2:] / (2 * np.pi)
         gt_normalized = torch.cat((gt_x_normalized, gt_y_normalized, gt_theta_normalized), dim=2)
@@ -210,7 +211,7 @@ class MainModel(nn.Module):
         bpdecay_params = 1 # bpdecay_params.unsqueeze(0).unsqueeze(2).double().to(device)
         l2_xy_loss =  torch.sum(torch.nn.functional.mse_loss(pred[:, :-1, :2], gt_normalized[:, 1:, :2], reduction='none') * bpdecay_params)
         l2_h_loss1 = torch.nn.functional.mse_loss(torch.cos(2 * np.pi * pred[:, :-1, 2]), torch.cos(2 * np.pi * gt_normalized[:, 1:, 2])) * bpdecay_params
-        l2_h_loss2 = torch.nn.functional.mse_loss(torch.sin(2 * np.pi * pred[:, :,-1 2]), torch.sin(2 * np.pi * gt_normalized[:, 1:, 2])) * bpdecay_params
+        l2_h_loss2 = torch.nn.functional.mse_loss(torch.sin(2 * np.pi * pred[:, :-1, 2]), torch.sin(2 * np.pi * gt_normalized[:, 1:, 2])) * bpdecay_params
         l2_h_loss = torch.sum(l2_h_loss1 + l2_h_loss2)
         #print('xy loss: ', l2_xy_loss)
         #print('vxy loss: ', l2_vxy_loss)

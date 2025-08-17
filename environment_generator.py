@@ -95,8 +95,8 @@ class World():
 
 num_tracks = 1
 
-num = 400000
-for k in tqdm(range(num, 500000)):
+num = 0
+for k in tqdm(range(0, 100)):
     env = World()
     sig = env.set_env()
 
@@ -106,7 +106,7 @@ for k in tqdm(range(num, 500000)):
     for i, el in enumerate(env.sensors.astype(int)):
         W[env.map_size-el[1]-1, el[0]] = 1
     W_sensors = np.vstack((env.sensors, np.nan*np.ones((20-len(env.sensors), 2))))
-    np.savetxt('worlds_train/world' + str(num) + '.csv', np.hstack((W, W_sensors.reshape(10, 4) + 0.5)), delimiter=',')
+    np.savetxt('worlds_test/world' + str(num) + '.csv', np.hstack((W, W_sensors.reshape(10, 4) + 0.5)), delimiter=',')
     num += 1
 
 plt.close('all')

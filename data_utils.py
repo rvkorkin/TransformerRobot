@@ -127,8 +127,8 @@ def gen_data(world_data, num_tracks=1, track_len=track_len, measurement_num=obs_
 if __name__ == "__main__":
     track_len = ModelParams().track_len
     #np.random.seed(ModelParams().random_seed)
-    data_type = 'train'
-    num0 = 400000
+    data_type = 'test'
+    num0 = 0
     num = num0
     folder_path = 'tracks_'+data_type
     if not os.path.exists(folder_path):
@@ -136,7 +136,7 @@ if __name__ == "__main__":
         print(f"Folder '{folder_path}' created.")
     else:
         print(f"Folder '{folder_path}' already exists.")
-    for num in tqdm(range(num0, num0+100000)):
+    for num in tqdm(range(num0, num0+100)):
         info = np.loadtxt('worlds_'+data_type+'/world'+str(num)+'.csv', delimiter=',')
         world = info[:, :10]
         beacons = info[:, 10:14].reshape(20, 2)
